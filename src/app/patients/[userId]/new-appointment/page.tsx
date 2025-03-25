@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import AppointmentForm from "@/components/forms/AppointmentForm";
 import Image from "next/image";
-import { getPatient } from '@/lib/actions/patient.action';
+import { getPatient } from '@/lib/actions/patient.actions';
 
 const NewAppointment: FC<SearchParamProps> = async ({ params: { userId } }) => {
     const patient = await getPatient(userId);

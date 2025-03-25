@@ -1,7 +1,7 @@
 
 import { FC } from 'react';
 import RegisterForm from '@/components/forms/RegisterForm';
-import { getUser } from '@/lib/actions/patient.action';
+import { getUser } from '@/lib/actions/patient.actions';
 import Image from 'next/image'
 
 const Register: FC<SearchParamProps> = async ({ params: { userId } }) => {
