@@ -20,7 +20,7 @@ const Success = async ({ params: { userId }, searchParams }: SearchParamProps) =
     appointment = await getAppointment(appointmentId);
   } catch (error) {
     console.error("Erreur lors de la récupération du rendez-vous :", error);
-    return <p className="text-center text-red-500">Une erreur s'est produite.</p>;
+    return <p className="text-center text-red-500">Une erreur s&apos;est produite.</p>;
   }
 
   if (!appointment) {
