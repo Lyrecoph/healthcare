@@ -13,17 +13,22 @@ import { FormFieldType } from "./PatientForm"
 import { SelectItem } from "../ui/select"
 import Image from "next/image"
 import { Doctors } from "../../../constants"
-import { createAppointment } from "@/lib/actions/appointment.actions"
+import { createAppointment, updateAppointment } from "@/lib/actions/appointment.actions"
+import { Appointment } from "../../../types/appwrite.types"
 
 const AppointmentForm = (
     {
         userId, 
         patientId, 
-        type
+        type,
+        appointment,
+        setOpen,
     }: {
         userId: string;
         patientId: string;
-        type: "create" | "cancel" | "schedule";
+        type: "create" | "annuler" | "programmer";
+        appointment?: Appointment;
+        setOpen: (open: boolean) => void;
     })  => {
 
   const router = useRouter();
@@ -50,10 +55,10 @@ const AppointmentForm = (
     let status;
 
     switch (type) {
-      case 'schedule':
+      case 'programmer':
         status = 'scheduled';
         break;
-      case 'cancel':
+      case 'annuler':
         status = 'canceled'
         break;
       default:
@@ -78,6 +83,24 @@ const AppointmentForm = (
         if(appointment){
           form.reset();
           router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`)
+        } else {
+          const appointmentToUpdate = {
+            userId,
+            appointmentId: appointment?.$id!,
+            appointment: {
+              primaryPhysician: values?.primaryPhysician,
+              schedule: new Date(values?.schedule),
+              status: status as Status,
+              cancellationReason: values?.cancellationReason
+            },
+            type
+          }
+          const updatedAppointment = await updateAppointment(appointmentToUpdate);
+
+          if(updateAppointment){
+            setOpen && setOpen(false);
+            form.reset();
+          }
         }
       }
 
@@ -89,13 +112,13 @@ const AppointmentForm = (
   let buttonLabel;
 
   switch (type) {
-    case 'cancel':
+    case 'annuler':
       buttonLabel = 'Rendez-vous annulé'
       break;
     case 'create':
       buttonLabel = 'Créer un rendez-vous'
       break;
-    case 'schedule':
+    case 'programmer':
       buttonLabel = 'Planifier un rendez-vous'
       break;
     default:
@@ -105,12 +128,12 @@ const AppointmentForm = (
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-        <section className="mb-12 space-y-4">
+        {type === 'create' && <section className="mb-12 space-y-4">
             <h1 className="header">Nouveau rendez-vous</h1>
             <p className="text-dark-700">Demandez un nouveau rendez-vous en 10 secondes</p>
-        </section>
+        </section>}
         
-        {type !== "cancel" && (
+        {type !== "annuler" && (
             <>
                 <CustomFormField 
                     fieldType={FormFieldType.SELECT}
@@ -164,7 +187,7 @@ const AppointmentForm = (
             </>
         )}
 
-        {type ===  "cancel" && (
+        {type ===  "annuler" && (
           <CustomFormField 
             fieldType={FormFieldType.TEXTAREA}
             control={form.control}
@@ -175,7 +198,7 @@ const AppointmentForm = (
         )}
         <SubmitButton 
           isLoading={isLoading} 
-          className={`${type === 'cancel' ? 
+          className={`${type === 'annuler' ? 
           'shad-danger-btn': 'shad-primary-btn'} w-full`}
         >
           {buttonLabel}
