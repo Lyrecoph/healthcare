@@ -1,11 +1,25 @@
-
-import { FC } from 'react';
-import RegisterForm from '@/components/forms/RegisterForm';
 import { getUser } from '@/lib/actions/patient.actions';
-import Image from 'next/image'
+import RegisterForm from '@/components/forms/RegisterForm';
+import Image from 'next/image';
+import * as Sentry from '@sentry/nextjs';
 
-const Register: FC<SearchParamProps> = async ({ params: { userId } }) => {
-  const user = await getUser(userId);
+type Props = {
+  params: { userId: string }
+};
+
+export default async function Register({ params }: Props) {
+  const { userId } = params;
+
+  let user = null;
+  try {
+    user = await getUser(userId);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'utilisateur :", error);
+  }
+
+  if (user) {
+    Sentry.captureMessage(`Register page viewed for user: ${user.name}`, 'info');
+  }
 
   return (
     <div className="flex h-screen max-h-screen">
@@ -18,11 +32,14 @@ const Register: FC<SearchParamProps> = async ({ params: { userId } }) => {
             alt="patient"
             className="mb-12 h-10 w-fit"
           />
-  
-          <RegisterForm user={user}/>
-          <p className="copyright py-12">
-            © 2024 Carepulse
-          </p>
+
+          {user ? (
+            <RegisterForm user={user} />
+          ) : (
+            <p className="text-red-500">Utilisateur introuvable</p>
+          )}
+          
+          <p className="copyright py-12">© 2024 Carepulse</p>
         </div>
       </section>
       <Image
@@ -35,5 +52,3 @@ const Register: FC<SearchParamProps> = async ({ params: { userId } }) => {
     </div>
   );
 }
-
-export default Register;

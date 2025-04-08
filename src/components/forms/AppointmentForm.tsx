@@ -34,15 +34,17 @@ const AppointmentForm = (
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const AppointmentFormValidation = getAppointmentSchema(type);
+  
+  console.log(appointment);
   // 1. Define your form.
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: "",
-      schedule: new Date(),
-      reason: "",
-      note: "",
-      cancellationReason: "",
+      primaryPhysician: appointment ? appointment.primaryPhysician : '',
+      schedule: appointment ? new Date(appointment?.schedule) : new Date(Date.now()),
+      reason: appointment ? appointment.reason : '',
+      note: appointment?.note || '',
+      cancellationReason: appointment?.cancellationReason || '',
     },
   })
 
@@ -67,7 +69,7 @@ const AppointmentForm = (
     }
 
     try {
-      if(type === 'create' && patientId){
+      if (type === 'create' && patientId) {
         const appointmentData = {
           userId,
           patient: patientId,
@@ -76,37 +78,41 @@ const AppointmentForm = (
           reason: values.reason!,
           note: values.note,
           status: status as Status
-        }
-
+        };
+    
         const appointment = await createAppointment(appointmentData);
-
-        if(appointment){
+    
+        if (appointment) {
           form.reset();
-          router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`)
-        } else {
-          const appointmentToUpdate = {
-            userId,
-            appointmentId: appointment?.$id!,
-            appointment: {
-              primaryPhysician: values?.primaryPhysician,
-              schedule: new Date(values?.schedule),
-              status: status as Status,
-              cancellationReason: values?.cancellationReason
-            },
-            type
-          }
-          const updatedAppointment = await updateAppointment(appointmentToUpdate);
-
-          if(updateAppointment){
-            setOpen && setOpen(false);
-            form.reset();
-          }
+          router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`);
+        }
+      } else if (appointment) {
+        // ✅ Ici on traite l’annulation ou la programmation
+        const appointmentToUpdate = {
+          userId,
+          appointmentId: appointment.$id,
+          appointment: {
+            primaryPhysician: values?.primaryPhysician,
+            schedule: new Date(values?.schedule),
+            status: status as Status,
+            cancellationReason: values?.cancellationReason
+          },
+          type
+        };
+    
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+    
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
+          router.refresh?.(); // si tu veux forcer le rafraîchissement
         }
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
+    
+    setIsLoading(false);
   }
 
   let buttonLabel;
@@ -196,6 +202,7 @@ const AppointmentForm = (
             placeholder="Entrez le motif de l'annulation"
           />
         )}
+
         <SubmitButton 
           isLoading={isLoading} 
           className={`${type === 'annuler' ? 

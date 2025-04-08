@@ -1,10 +1,23 @@
 import { FC } from 'react';
-import AppointmentForm from "@/components/forms/AppointmentForm";
 import Image from "next/image";
+
+import * as Sentry from '@sentry/nextjs';
+
+import AppointmentForm from "@/components/forms/AppointmentForm";
 import { getPatient } from '@/lib/actions/patient.actions';
 
-const NewAppointment: FC<SearchParamProps> = async ({ params: { userId } }) => {
-    const patient = await getPatient(userId);
+type Props = {
+  params: { userId: string }
+};
+
+const NewAppointment = async ({ params }: Props) => {
+  const userId = params.userId;
+
+  const patient = await getPatient(userId);
+
+  Sentry.setTag("page", "new-appointment");
+  Sentry.setUser({ id: userId, username: patient?.name });
+  Sentry.captureMessage(`Page de nouveau rendez-vous consultée par l'utilisateur`, 'info');
     
   return (
     <div className="flex h-screen max-h-screen">

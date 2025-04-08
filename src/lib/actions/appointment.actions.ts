@@ -44,34 +44,33 @@ export const getRecentAppointmentList = async () => {
       [Query.orderDesc('$createdAt')]
     );
 
+    if (!appointments) throw new Error("No data received from Appwrite");
+
     const initialCounts = {
       scheduledCount: 0,
       pendingCount: 0,
       cancelledCount: 0,
-    }
+    };
 
     const counts = (appointments.documents as Appointment[]).reduce((acc, appointment) => {
-      if(appointment.status === 'scheduled'){
-        acc.scheduledCount += 1;
-      } else if (appointment.status === 'pending'){
-        acc.pendingCount += 1;
-      } else if (appointment.status === 'canceled'){
-        acc.cancelledCount += 1;
-      }
-
+      if(appointment.status === 'scheduled') acc.scheduledCount += 1;
+      else if (appointment.status === 'pending') acc.pendingCount += 1;
+      else if (appointment.status === 'canceled') acc.cancelledCount += 1;
       return acc;
     }, initialCounts);
 
-    const data = {
+    return parseStringify({
       totalCount: appointments.total,
       ...counts,
-      documents: appointments.documents
-    }
-    return parseStringify(data);
+      documents: appointments.documents,
+    });
+
   } catch (error) {
-    console.log(error)
+    console.error("Error fetching appointments:", error);
+    return null; // Retourner null pour éviter l'erreur `undefined`
   }
-}
+};
+
 
 export const updateAppointment = async ({ 
   appointmentId, 

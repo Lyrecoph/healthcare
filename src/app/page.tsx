@@ -15,7 +15,7 @@ export default function Home({searchParams}: SearchParamProps) {
       {/* TODO: OTP Verification | PasskeyModal */}
       { isAdmin && <PasskeyModal />}
       <section className="remove-scrollbar container my-auto">
-        <div className="sub-container max-w-[496px]">
+        <div className="sub-container max-w-[496px] flex-1 flex-col py-10">
           <Image 
             src="/assets/icons/logo-full.svg"
             height={1000}
