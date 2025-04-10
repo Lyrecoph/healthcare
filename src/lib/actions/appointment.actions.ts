@@ -1,11 +1,11 @@
 'use server'
 
 import { ID, Query } from "node-appwrite"
-import { APPOINTMENT_COLLECTION_ID, databases, DATABASE_ID } from "../appwrite.config"
+import { APPOINTMENT_COLLECTION_ID, databases, DATABASE_ID, messaging } from "../appwrite.config"
 import { parseStringify } from "../../../lib/utils"
 import { Appointment } from "../../../types/appwrite.types"
 import { revalidatePath } from "next/cache"
-
+import { formatDateTime } from "../utils"
 
 export const createAppointment = async (appointment: CreateAppointmentParams) => {
     try {
@@ -90,11 +90,36 @@ export const updateAppointment = async ({
       throw new Error('Rendez-vous non trouvé');
     }
 
-    // SMS notification
-
+    const smsMessage = `Bonjour, c'est CarePulse. 
+      ${type === 'programmer' 
+        ? `Votre rendez-vous a été programmé pour ${formatDateTime(appointment.schedule!).dateTime} avec le médecin ${appointment.primaryPhysician}`
+        : `Nous avons le regret de vous informer que votre rendez-vous a été annulé 
+           pour la raison suivante: ${appointment.cancellationReason}
+          `
+      }
+    `
+    await sendSMSNotification(userId, smsMessage);
+    // Récupère d'abord le patient pour avoir son phone
+    // const patient = await getPatient(userId);
+    // await sendSMSNotification(patient.phone, smsMessage);
     revalidatePath('/admin');
     return parseStringify(updatedAppointment)
   } catch (error) {
     console.log(error)
+  }
+}
+
+
+export const sendSMSNotification = async (userId: string, content: string) => {
+  try {
+    const message = await messaging.createSms(
+      ID.unique(),
+      content,
+      [],         
+      [userId],  // ici ton numéro de l'utilisateur
+    );
+    return parseStringify(message);
+  } catch (error) {
+    console.error("Erreur SMS:", error);
   }
 }

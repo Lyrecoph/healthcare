@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import Image from "next/image";
 
 import * as Sentry from '@sentry/nextjs';
