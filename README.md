@@ -1,6 +1,6 @@
 # 🩺 Carepulse
 
-Carepulse est une application web de gestion médicale construite avec **Next.js 14**, permettant aux professionnels de la santé de planifier, suivre et gérer efficacement les rendez-vous médicaux et les patients. Elle inclut une interface moderne, un système de thèmes (clair/sombre), et une structure de code bien documentée pour faciliter la maintenance et les contributions.
+Carepulse est une application web de gestion médicale construite avec **Next.js 15**, permettant aux professionnels de la santé de planifier, suivre et gérer efficacement les rendez-vous médicaux et les patients. Elle inclut une interface moderne, un système de thèmes (sombre), et une structure de code bien documentée pour faciliter la maintenance et les contributions.
 
 ---
 
@@ -64,8 +64,6 @@ Carepulse est une application web de gestion médicale construite avec **Next.js
 
 👉 **Envoyer un SMS de confirmation de rendez-vous :**  Les patients reçoivent des notifications par SMS pour confirmer les détails de leur rendez-vous grâce à twilio
 
-👉 **Réactivité totale :**  L'application fonctionne parfaitement sur tous les types d'appareils et toutes les tailles d'écran.
-
 👉 **Téléchargement de fichiers à l'aide du stockage Appwrite :**  Les utilisateurs peuvent télécharger et stocker des fichiers en toute sécurité dans l'application à l'aide des services de stockage Appwrite.
 
 👉 **Gérer et suivre les performances des applications à l'aide de Sentry :**  L'application utilise Sentry pour surveiller et suivre ses performances et détecter les erreurs.
@@ -107,7 +105,7 @@ Créez un nouveau fichier nommé `.env.local` à la racine de votre projet et aj
     APPOINTMENT_COLLECTION_ID=
     NEXT_PUBLIC_BUCKET_ID=
 
-    NEXT_PUBLIC_ADMIN_PASSKEY=111111
+    NEXT_PUBLIC_ADMIN_PASSKEY=587642
 ```
 Remplacez les valeurs d'espace réservé par vos identifiants Appwrite. Vous pouvez les obtenir en vous inscrivant sur le [site web d'Appwrite](https://appwrite.io/).
 
