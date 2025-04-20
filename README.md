@@ -4,6 +4,9 @@ Carepulse est une application web de gestion médicale construite avec **Next.js
 
 ---
 
+![Carepulse](public/assets/images/heathcareApp-img.png)
+
+
 ## 📁 Structure du projet
 
 ```bash
