@@ -1,37 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🩺 Carepulse
 
-## Getting Started
+Carepulse est une application web de gestion médicale construite avec **Next.js 14**, permettant aux professionnels de la santé de planifier, suivre et gérer efficacement les rendez-vous médicaux et les patients. Elle inclut une interface moderne, un système de thèmes (clair/sombre), et une structure de code bien documentée pour faciliter la maintenance et les contributions.
 
-First, run the development server:
+---
+
+## 📁 Structure du projet
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+├── public/        # Fichiers statiques (icônes, images) 
+├── app/           # Dossier principal des pages et composants 
+│ 
+├── components/    # Composants réutilisables (UI, formulaires, etc.) 
+│ 
+├── patients/      # Pages servent à créer un nouveau patient, rendez-vous 
+│ 
+├── globals.css    # Fichier de styles globaux layout.tsx 
+│ 
+├── layout.tsx     # Layout principal avec configuration du thème 
+│
+├── loading.tsx    # Page sert à afficher un écran de chargement
+│ 
+└── page.tsx       # Page sert à la landing page de l’application 
+├── lib/           # Fonctions utilitaires (helpers) 
+│ 
+├── instrumentation-client.ts       # Fichier initialisé par sentry pour le client (navigateur)
+├── instrumentation.ts    # Fonction d'initialisation de Sentry en fonction du runtime utilisé 
+└── utils.ts              # Fonction cn pour gérer les classes conditionnelles 
+├── types/                # Déclarations de types TypeScript (ex: Appointment) 
+├── .env.local            # Variables d’environnement locales (non versionnées)
+├── tailwind.config.ts    # Configuration de Tailwind CSS (thème, couleurs, breakpoints)
+├── tsconfig.json         # Configuration TypeScript du projet
+├── README.md             # Documentation du projet, structure, usage, et informations générales.
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧰 Technologies utilisées
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 15**
+- **TypeScript**
+- **Tailwind CSS**
+- **shadcn/ui** : bibliothèque de composants UI accessible et stylée
+- **Appwrite** : backend as a service pour gérer les rendez-vous et utilisateurs
+- **Twilio**:  service de communication utilisé pour l’envoi de notifications SMS aux patients  (rappels de rendez-vous, confirmations, etc.)
+- **React Hooks (useState, useEffect...)**
+- **ESLint + Prettier** : pour la qualité et la cohérence du code
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📋 Fonctionnalités principales
 
-To learn more about Next.js, take a look at the following resources:
+👉 **S'inscrire en tant que patient :**  Les utilisateurs peuvent s’inscrire et créer un profil personnel en tant que patient.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+👉 **Prendre un nouveau rendez-vous avec le médecin :**  Les patients peuvent prendre rendez-vous avec des médecins à leur convenance et peuvent réserver plusieurs rendez-vous.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+👉 **Gérer les rendez-vous côté administrateur :**  Les administrateurs peuvent visualiser et gérer efficacement tous les rendez-vous planifiés.
 
-## Deploy on Vercel
+👉 **Confirmer/planifier un rendez-vous depuis le côté administrateur :**  Les administrateurs peuvent confirmer et définir les heures de rendez-vous pour s'assurer qu'elles sont correctement planifiées.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+👉 **Annuler un rendez-vous depuis le côté administrateur :**  Les administrateurs ont la possibilité d’annuler tout rendez-vous si nécessaire.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# healthcare
+👉 **Envoyer un SMS de confirmation de rendez-vous :**  Les patients reçoivent des notifications par SMS pour confirmer les détails de leur rendez-vous grâce à twilio
+
+👉 **Réactivité totale :**  L'application fonctionne parfaitement sur tous les types d'appareils et toutes les tailles d'écran.
+
+👉 **Téléchargement de fichiers à l'aide du stockage Appwrite :**  Les utilisateurs peuvent télécharger et stocker des fichiers en toute sécurité dans l'application à l'aide des services de stockage Appwrite.
+
+👉 **Gérer et suivre les performances des applications à l'aide de Sentry :**  L'application utilise Sentry pour surveiller et suivre ses performances et détecter les erreurs.
+
+---
+
+## 🚀 Lancer le projet en local
+
+### ✅ Prérequis
+
+- Node.js >= 18.x
+- Yarn ou npm
+- Accès à une instance Appwrite ou configuration des clés d’API
+
+### 🛠 Installation
+
+```bash
+# 1. Cloner le repo
+git clone https://github.com/Lyrecoph/healthcare.git
+cd healthcare
+```
+
+```bash
+# 2. Installer les dépendances
+npm install
+# ou
+yarn install
+```
+
+```bash
+# 3. Configurer les variables d'environnement
+Créez un nouveau fichier nommé `.env.local` à la racine de votre projet et ajoutez le contenu suivant :
+    #APPWRITE
+    NEXT_PUBLIC_ENDPOINT=https://cloud.appwrite.io/v1
+    PROJECT_ID=
+    API_KEY=
+    DATABASE_ID=
+    PATIENT_COLLECTION_ID=
+    APPOINTMENT_COLLECTION_ID=
+    NEXT_PUBLIC_BUCKET_ID=
+
+    NEXT_PUBLIC_ADMIN_PASSKEY=111111
+```
+Remplacez les valeurs d'espace réservé par vos identifiants Appwrite. Vous pouvez les obtenir en vous inscrivant sur le [site web d'Appwrite](https://appwrite.io/).
+
+```bash
+# 3. Lancer le serveur en développement
+npm run dev
+# ou
+yarn dev
+```
+L'application est maintenant disponible sur `http://localhost:3000`.
+
+## 🧪 Scripts utiles
+
+| Commande        | Description                          |
+|-----------------|--------------------------------------|
+| `npm run dev`   | Démarre le serveur Next.js en dev    |
+| `npm run build` | Compile l'application pour la prod   |
+| `npm run lint`  | Analyse statique avec ESLint         |
+| `npm run format`| Formate le code avec Prettier        |
+
+## 📦 Déploiement
+Cette application peut être déployée sur :
+
+- **Vercel (recommandé pour les projets Next.js)**
+
+- **Netlify**
+
+- **Render**
+
+- Ou toute plateforme supportant Node.js
+
+## 👨‍👩‍👧 Collaboration
+
+### 🔄 Relecture du code
+
+Le code a été refactoré avec soin et documenté pour faciliter la compréhension des nouveaux développeurs. Chaque fichier important contient des commentaires explicatifs.
+
+### 📥 Contributions
+
+Contributions bienvenues ! Pour proposer un changement :
+
+1. Fork le repo
+
+2. Crée une branche : git checkout -b feature/ta-feature
+
+3. Commits propres avec conventional commits
+
+4. PR avec description claire et concis
+
+
+## 📝 Licence
+
+Ce projet est sous licence MIT – libre à vous de l’utiliser, le modifier ou le distribuer.

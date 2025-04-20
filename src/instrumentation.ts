@@ -1,4 +1,3 @@
-// Importation du SDK Sentry spécifique à Next.js
 import * as Sentry from '@sentry/nextjs';
 
 /**
