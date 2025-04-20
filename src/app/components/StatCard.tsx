@@ -25,11 +25,11 @@ export const StatCard = ({ count = 0, label, icon, type }: StatCardProps) => {
       <div className='flex items-center gap-4'>
         {/* Icône visuelle représentant la statistique */}
         <Image 
-          src={icon}            // URL ou chemin de l'image
-          height={32}           // Hauteur fixe
-          width={32}            // Largeur fixe
-          alt={label}           // Texte alternatif pour l'accessibilité
-          className='size-8 w-fit' // Style personnalisé
+          src={icon}            
+          height={32}           
+          width={32}            
+          alt={label}          
+          className='size-8 w-fit' 
         />
         {/* Nombre mis en avant avec une grande taille et en blanc */}
         <h2 className='text-32-bold text-white'>{count}</h2>

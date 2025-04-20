@@ -41,13 +41,13 @@ const SubmitButton = ({ isLoading, className, children }: SubmitButtonProps) => 
         // Affichage du loader animé et du texte "Loading ..."
         <div className="flex items-center gap-4">
           <Image
-            src="/assets/icons/loader.svg"    // Icône de loader (SVG statique)
-            alt="loader"                      // Texte alternatif pour accessibilité
-            width={24}                         // Dimensions du loader
+            src="/assets/icons/loader.svg"    
+            alt="loader"                      
+            width={24}                         
             height={24}
-            className="animate-spin"          // Classe Tailwind pour animer la rotation
+            className="animate-spin"          
           />
-          Loading ...                          // Texte affiché à côté du loader
+          Loading ...                         
         </div>
       ) : (
         // Affiche le contenu enfant du bouton lorsque non en chargement

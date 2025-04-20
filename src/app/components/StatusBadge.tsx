@@ -17,10 +17,10 @@ export const StatusBadge = ({ status }: { status: Status }) => {
       {/* Icône correspondant au statut, récupérée dynamiquement depuis l’objet StatusIcon */}
       <Image 
         src={StatusIcon[status]} // Ex: StatusIcon['pending']
-        alt={status}             // Texte alternatif pour l'accessibilité
+        alt={status}             
         width={24}
         height={24}
-        className='h-fit w-3'    // Taille personnalisée de l’icône
+        className='h-fit w-3'    
       />
 
       {/* Libellé textuel du statut avec une couleur de texte conditionnelle */}
